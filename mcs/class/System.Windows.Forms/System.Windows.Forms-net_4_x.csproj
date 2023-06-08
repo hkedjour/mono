@@ -37,6 +37,7 @@
     <DefineConstants>TRACE;NET_4_0;NET_4_5;NET_4_6;MONO;WIN_PLATFORM;MULTIPLEX_OS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,6 +46,7 @@
     <DefineConstants>NET_4_0;NET_4_5;NET_4_6;MONO;WIN_PLATFORM;MULTIPLEX_OS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <!-- Set AddAdditionalExplicitAssemblyReferences to false, otherwise if targetting .NET4.0, 
   Microsoft.NETFramework.props will force a dependency on the assembly System.Core. This
@@ -158,7 +160,6 @@
     <Compile Include="System.Windows.Forms.VisualStyles\GlyphFontSizingType.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\GlyphType.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\GroupBoxState.cs" />
-    <Compile Include="System.Windows.Forms.VisualStyles\GtkPlus.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\HitTestCode.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\HitTestOptions.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\HorizontalAlign.cs" />
@@ -193,7 +194,6 @@
     <Compile Include="System.Windows.Forms.VisualStyles\VisualStyleInformation.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\VisualStyleRenderer.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\VisualStylesEngine.cs" />
-    <Compile Include="System.Windows.Forms.VisualStyles\VisualStylesGtkPlus.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\VisualStylesNative.cs" />
     <Compile Include="System.Windows.Forms.VisualStyles\VisualStyleState.cs" />
     <Compile Include="System.Windows.Forms.WebBrowserDialogs\AlertCheck.cs" />
@@ -954,7 +954,6 @@
     <Compile Include="System.Windows.Forms\WindowsFormsSection.cs" />
     <Compile Include="System.Windows.Forms\WindowsFormsSynchronizationContext.cs" />
     <Compile Include="System.Windows.Forms\X11Clipboard.cs" />
-    <Compile Include="System.Windows.Forms\X11DesktopColors.cs" />
     <Compile Include="System.Windows.Forms\X11Dnd.cs" />
     <Compile Include="System.Windows.Forms\X11Keyboard.cs" />
     <Compile Include="System.Windows.Forms\X11Structs.cs" />
@@ -964,7 +963,8 @@
     <Compile Include="System.Windows.Forms\XplatUIDriver.cs" />
     <Compile Include="System.Windows.Forms\XplatUIStructs.cs" />
     <Compile Include="System.Windows.Forms\XplatUIWin32.cs" />
-    <Compile Include="System.Windows.Forms\XplatUIX11.cs" />  </ItemGroup>
+    <Compile Include="System.Windows.Forms\XplatUIX11.cs" />
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -987,46 +987,17 @@
     </PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../corlib/corlib-net_4_x.csproj">
-      <Project>{2CA6026B-2DC8-4C4C-A12C-1E8234049DB7}</Project>
-      <Name>corlib-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../System/System-net_4_x.csproj">
-      <Project>{2762E921-91A8-4C87-91E9-BA628013F753}</Project>
-      <Name>System-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../System.XML/System.Xml-net_4_x.csproj">
-      <Project>{87FD2F0F-5222-4AE6-BD63-2D4975E11E5B}</Project>
-      <Name>System.Xml-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../System.Drawing/System.Drawing-net_4_x.csproj">
-      <Project>{584A5E46-2958-4CB2-8DF9-188B420D0BB0}</Project>
-      <Name>System.Drawing-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../Accessibility/Accessibility-net_4_x.csproj">
-      <Project>{E51283DC-7090-479E-B723-01C0953F18EA}</Project>
-      <Name>Accessibility-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../System.Data/System.Data-net_4_x.csproj">
-      <Project>{EC439BB8-FFED-4A32-A05D-2FA3A70CAD64}</Project>
-      <Name>System.Data-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../Mono.Posix/Mono.Posix-net_4_x.csproj">
-      <Project>{66DBB049-785B-4C2E-9EF6-C9E163F7DDD1}</Project>
-      <Name>Mono.Posix-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../Mono.WebBrowser/Mono.WebBrowser-net_4_x.csproj">
-      <Project>{B6DD737B-421C-4201-A852-8022328FE59D}</Project>
-      <Name>Mono.WebBrowser-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../System.Configuration/System.Configuration-net_4_x.csproj">
-      <Project>{D5CDC09C-F19A-4811-A6C8-70F51CBFB644}</Project>
-      <Name>System.Configuration-net_4_x</Name>
-    </ProjectReference>
-    <ProjectReference Include="../System.Runtime.Serialization.Formatters.Soap/System.Runtime.Serialization.Formatters.Soap-net_4_x.csproj">
-      <Project>{A157AD69-59D4-49DE-94B3-DB883B2BEAA5}</Project>
-      <Name>System.Runtime.Serialization.Formatters.Soap-net_4_x</Name>
-    </ProjectReference>
+    <Reference Include="Accessibility" />
+    <Reference Include="Mono.Posix" />
+    <Reference Include="Mono.WebBrowser" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
