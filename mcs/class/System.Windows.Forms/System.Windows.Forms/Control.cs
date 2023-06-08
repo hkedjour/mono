@@ -375,8 +375,10 @@ namespace System.Windows.Forms
 			public void End (PaintEventArgs pe) {
 				Graphics buffered_graphics;
 				buffered_graphics = pe.SetGraphics ((Graphics) real_graphics.Pop ());
+                buffered_graphics.Flush();
 
-				if (pending_disposal) 
+
+                if (pending_disposal) 
 					Dispose ();
 				else {
 					XplatUI.BlitFromOffscreen (parent.Handle, pe.Graphics, back_buffer, buffered_graphics, pe.ClipRectangle);

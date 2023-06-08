@@ -263,7 +263,6 @@ namespace System.Windows.Forms {
 
 			// X11 Initialization
 			SetDisplay(XOpenDisplay(IntPtr.Zero));
-			X11DesktopColors.Initialize();
 
 			
 			// Disable keyboard autorepeat
@@ -2820,35 +2819,6 @@ namespace System.Windows.Forms {
 
 		internal override void ClipboardStore (IntPtr handle, object obj, int type, XplatUI.ObjectToClipboard converter, bool copy)
 		{
-			Clipboard.Converter = converter;
-
-			if (obj != null) {
-				Clipboard.AddSource (type, obj);
-				XSetSelectionOwner (DisplayHandle, CLIPBOARD, FosterParent, IntPtr.Zero);
-
-				if (copy) {
-					try {
-						var clipboardAtom = gdk_atom_intern ("CLIPBOARD", true);
-						var clipboard = gtk_clipboard_get (clipboardAtom);
-						if (clipboard != IntPtr.Zero) {
-							// for now we only store text
-							var text = Clipboard.GetRtfText ();
-							if (string.IsNullOrEmpty (text))
-								text = Clipboard.GetPlainText ();
-							if (!string.IsNullOrEmpty (text)) {
-								gtk_clipboard_set_text (clipboard, text, text.Length);
-								gtk_clipboard_store (clipboard);
-							}
-						}
-					} catch {
-						// ignore any errors - most likely because gtk isn't installed?
-					}
-				}
-			} else {
-				// Clearing the selection
-				Clipboard.ClearSources ();
-				XSetSelectionOwner (DisplayHandle, CLIPBOARD, IntPtr.Zero, IntPtr.Zero);
-			}
 		}
 
 		internal override void CreateCaret (IntPtr handle, int width, int height)
@@ -5608,17 +5578,24 @@ namespace System.Windows.Forms {
 						scans = region.GetRegionScans(m);
 					rects = new XRectangle[scans.Length];
 					for (int i = 0; i < scans.Length; i++) {
-						rects[i].X = (short) Math.Clamp(scans[i].X, short.MinValue, short.MaxValue);
-						rects[i].Y = (short) Math.Clamp(scans[i].Y, short.MinValue, short.MaxValue);
-						rects[i].Width = (ushort) Math.Clamp(scans[i].Width, ushort.MinValue, ushort.MaxValue);
-						rects[i].Height = (ushort) Math.Clamp(scans[i].Height, ushort.MinValue, ushort.MaxValue);
+						rects[i].X = (short) Clamp(scans[i].X, short.MinValue, short.MaxValue);
+						rects[i].Y = (short) Clamp(scans[i].Y, short.MinValue, short.MaxValue);
+						rects[i].Width = (ushort) Clamp(scans[i].Width, ushort.MinValue, ushort.MaxValue);
+						rects[i].Height = (ushort) Clamp(scans[i].Height, ushort.MinValue, ushort.MaxValue);
 					}
 				}
 				XShapeCombineRectangles(DisplayHandle, hwnd.WholeWindow, XShapeKind.ShapeBounding, 0, 0, rects, rects.Length, XShapeOperation.ShapeSet, XOrdering.Unsorted);
 			}
 		}
 
-		internal override void SetCursor(IntPtr handle, IntPtr cursor)
+        public static T Clamp<T>(T val, T min, T max) where T : IComparable<T>
+        {
+            if (val.CompareTo(min) < 0) return min;
+            if (val.CompareTo(max) > 0) return max;
+            return val;
+        }
+
+        internal override void SetCursor(IntPtr handle, IntPtr cursor)
 		{
 			Hwnd	hwnd;
 
@@ -7677,19 +7654,6 @@ namespace System.Windows.Forms {
 		[DllImport ("libX11", EntryPoint="XGetInputFocus")]
 		internal extern static void XGetInputFocus (IntPtr display, out IntPtr focus, out IntPtr revert_to);
 		#endregion
-#region Gtk/Gdk imports
-		[DllImport("libgdk-x11-2.0")]
-		internal extern static IntPtr gdk_atom_intern (string atomName, bool onlyIfExists);
-
-		[DllImport("libgtk-x11-2.0")]
-		internal extern static IntPtr gtk_clipboard_get (IntPtr atom);
-
-		[DllImport("libgtk-x11-2.0")]
-		internal extern static void gtk_clipboard_store (IntPtr clipboard);
-
-		[DllImport("libgtk-x11-2.0")]
-		internal extern static void gtk_clipboard_set_text (IntPtr clipboard, string text, int len);
-#endregion
 
 #region Shape extension imports
 		[DllImport("libXext")]
