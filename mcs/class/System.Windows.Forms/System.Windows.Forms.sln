@@ -1,0 +1,17 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Windows.Forms", "System.Windows.Forms.csproj", "{19D6D457-8112-4097-9DFF-069CFDC14A49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|net_4_x = Debug|net_4_x
+		Release|net_4_x = Release|net_4_x
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19D6D457-8112-4097-9DFF-069CFDC14A49}.Debug|net_4_x.ActiveCfg = Debug|net_4_x
+		{19D6D457-8112-4097-9DFF-069CFDC14A49}.Debug|net_4_x.Build.0 = Debug|net_4_x
+		{19D6D457-8112-4097-9DFF-069CFDC14A49}.Release|net_4_x.ActiveCfg = Release|net_4_x
+		{19D6D457-8112-4097-9DFF-069CFDC14A49}.Release|net_4_x.Build.0 = Release|net_4_x
+	EndGlobalSection
+EndGlobal
